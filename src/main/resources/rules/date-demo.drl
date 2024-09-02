@@ -1,0 +1,29 @@
+package com.unciadroolsdate.model
+import com.unciadroolsdate.model.DateModel;
+global com.unciadroolsdate.model.Response response;
+
+//dialect "mvel"
+//dialect "java"
+
+
+import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
+rule "Testing date"
+	salience 7
+	when
+	then 
+		insert(Date.from(LocalDate.now().minusDays(180).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+end
+
+rule "Testing Before"
+	salience 6
+	when
+	_180daysAgo : Date()
+	$c: DateModel($inputDate : inputDate, $inputDate.after(_180daysAgo))
+
+	then
+		System.out.println(_180daysAgo);
+		System.out.println("The date "+$inputDate+" is less than 180 days");
+end
